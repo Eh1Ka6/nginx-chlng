@@ -17,7 +17,7 @@ pipeline
 		  {
 		    script{	
 				env.PCRE = sh(
-						returnStdout: true, script: '''find /lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex ".*pcre.so.[3-8].*" -type f -print -quit '''
+						returnStdout: true, script: '''find /lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex ".*pcre.so.[4-8].*" -type f -print -quit '''
 					     ).trim()
 				env.SSL = sh (
 					  returnStdout: true,
@@ -30,10 +30,7 @@ pipeline
 				{
 		            sh ('''mkdir deps''') 
 		        }
-		        echo "${SSL}"
-		        echo "${ZLIB}"
-		        echo "${PCRE}"
-		        echo "${DATE}"
+		       
 		    }
 		  }
 		}      
@@ -42,40 +39,50 @@ pipeline
 		   parallel 
 		   {
 		     stage('check for ZLIB')
-		     {
-		        when {
-				expression { env.ZLIB  == null || env.ZLIB == "" }
-			 }	
+		     { 	
 		         steps {
 		         	script{
-		         		
+		         		if ( env.ZLIB  == null || env.ZLIB == "" )
+		         		{
 	                 	sh ('''cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
 						env.ZLIB = "deps/zlib-1.2.11/"
+						}
+						else {
+						    env.ZLIB =""
+						}
+
 					}
 			  }
 		     }
 		     stage('check for SSL')
 		     {
-		        when {
-	                        expression { env.SSL  == null || env.SSL == "" }
-	                 }
 	                 steps {
 	                 	script{
-	                 		
-	                        sh ('''cd deps && wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && tar xzvf openssl-1.1.0f.tar.gz ''')   
-	                        env.SSL= "deps/openssl-1.1.0f/"
+	                 		if (env.SSL  == null || env.SSL == "" )
+	                 		{
+		                        sh ('''cd deps && wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && tar xzvf openssl-1.1.0f.tar.gz ''')   
+		                        env.SSL= "deps/openssl-1.1.0f/"
+	                        }
+	                        else 
+	                        {
+    							env.SSL=""
+							}
 	                   }
 	                 }
 		     }
 		     stage('check for PCRE')
 		     {
-		        when {
-	                        expression { env.PCRE  == null || env.PCRE == "" }
-	                 }
 	                 steps {
 	                 	script{
+	                 	if(env.PCRE  == null || env.PCRE == "")
+	                 	{
 	                        sh ('''cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
 	                        env.PCRE = "deps/pcre-8.40/"
+	                    }
+	                    else {
+	                         env.PCRE = ""
+	                    }
+
 	                  }
 	                }
 		     }
@@ -85,10 +92,11 @@ pipeline
         stage('Build')
 	    {
             steps {
-            	echo "${env.SSL}"
-		        echo "${env.ZLIB}"
-		        echo "${env.PCRE}"
-                sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log --user=nginx --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  --with-http_ssl_module --with-openssl=${SSL} --with-zlib=${ZLIB}  --with-pcre=${PCRE}'
+            	
+                sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx  \\
+                --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log --user=nginx 
+                --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  --with-http_ssl_module
+                 --with-openssl=${SSL} --with-zlib=${ZLIB}  --with-pcre=${PCRE}'
                 sh 'make'
 		 	}
         }
