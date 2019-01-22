@@ -3,18 +3,24 @@ pipeline {
     environment { 
     } 
     stages {
+	stage ('Set SCM'){
+		steps {
+			def scmVars = checkout scm
+		}
+	}
+
 	stage ('Set ENV var'){
 	  steps{
 	   script{
 		env.PCRE = sh(
-			script: '''ls -d -1 /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \
+			script: '''ls -d -1 /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \\
 				   | grep -q  ".*pcre\.so\.[3-8].*"''',
 			returnStdout: true).trim()
 		env.SSL = sh (
-			  script: ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \
+			  script: ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \\
 					| grep -E "^openssl-1.(0.[2-9])|openssl-1.(1.0)";''',
 			  returnStdout: true).trim()
-		env.ZLIB = sh ( script : ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \
+		env.ZLIB = sh ( script : ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \\
                                         | grep -E "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])""'''
 					returnStdout: true).trim())
 		env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
@@ -49,8 +55,8 @@ pipeline {
       stage('Build')
 	{
             steps {
-                sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log \
-			--user=nginx --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  \
+                sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log \\
+			--user=nginx --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  \\
 			--with-http_ssl_module --with-openssl=${SSL} --with-zlib=${ZLIB}  --with-pcre=${PCRE}'
                 sh 'make'
 		}
