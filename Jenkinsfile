@@ -1,7 +1,12 @@
 pipeline {
     agent any
-    environment { 
+    environment {
+	PCRE =""
+	SSL=""
+	ZLIB=""
+	DATE="" 
     } 
+
     stages {
 	stage ('Set SCM'){
 		steps {
@@ -34,27 +39,36 @@ pipeline {
 	 steps {
 	   parallel 
 	   {
-	    when {
+	     stage('check for ZLIB')
+	     {
+	        when {
 			expression { env.ZLIB  == null || env.ZLIB == "" }
 		 }	
-	    steps {
+	         steps {
 			sh ('''if [! -d deps/  ];then mkdir deps ;fi && cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
 			env.ZLIB = "deps/zlib-1.2.11/"
 		  }
-	    when {
+	     }
+	     stage('check for SSL')
+	     {
+	        when {
                         expression { env.SSL  == null || env.SSL == "" }
                  }
-            steps {
+                 steps {
                         sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && tar xzvf openssl-1.1.0f.tar.gz ''')   
                         env.ZLIB = "deps/openssl-1.1.0f/"
                   }
-	    when {
+	     }
+	     stage('check for PCRE')
+	     {
+	        when {
                         expression { env.PCRE  == null || env.PCRE == "" }
                  }
-            steps {
+                 steps {
                         sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
                         env.ZLIB = "deps/pcre-8.40/"
                   }
+	     }
 	    }
 	  }
 	}
