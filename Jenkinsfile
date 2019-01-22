@@ -18,32 +18,38 @@ pipeline
 			  }
 			}
 		 }
-		stage ('Set ENV var')
+		stage ('Set Environnement')
 		{
 		  steps
 		  {
 		    script{	
-			env.PCRE = sh(
-					returnStdout: true, script: '''find /lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex ".*pcre.so.[3-8].*" -type f -print -quit '''
-				     )
-			env.SSL = sh (
-				  returnStdout: true,
-				  script: ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "^openssl-1.(0.[2-9])|openssl-1.(1.0)" -type f -print -quit'''
-				   )
-			env.ZLIB = sh ( script : ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])" -type f -print -quit''',
-						returnStdout: true)
-			env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
+				env.PCRE = sh(
+						returnStdout: true, script: '''find /lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex ".*pcre.so.[3-8].*" -type f -print -quit '''
+					     )
+				env.SSL = sh (
+					  returnStdout: true,
+					  script: ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "^openssl-1.(0.[2-9])|openssl-1.(1.0)" -type f -print -quit'''
+					   )
+				env.ZLIB = sh ( script : ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])" -type f -print -quit''',
+							returnStdout: true)
+				env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
+				if(!fileExists("deps/"))
+				{
+		            sh ('''mkdir deps''') 
+		        }
 		    }
 		  }
 		} 
+		
+		        		
+	        
         stage('Download missing lib') 
 		{
 		steps {
-		       script{
-		         		if(!fileExists("deps/"))
-							{
-	                        sh ('''mkdir deps''') 
-	                        }        	
+		         	script{
+		         		
+	                 	sh ('''cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
+						env.ZLIB = "deps/zlib-1.2.11/"
 					}
 			  }	
 		   parallel 
@@ -81,6 +87,7 @@ pipeline
 	                 }
 	                 steps {
 	                 	script{
+	                 		
 	                        sh ('''cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
 	                        env.PCRE = "deps/pcre-8.40/"
 	                  }
