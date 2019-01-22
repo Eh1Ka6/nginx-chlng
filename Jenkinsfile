@@ -1,6 +1,6 @@
 pipeline 
 {
-    agent { label 'whatever' }
+    agent any 
     stages 
     {
 		stage ('Set SCM')
