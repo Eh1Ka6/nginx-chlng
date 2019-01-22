@@ -81,8 +81,6 @@ pipeline {
                 sh 'make'
 		}
         }
-      	node 
-      	 {
 
       stage('Deploy') 
       {
@@ -91,7 +89,6 @@ pipeline {
               def image = docker.build('Ngx:${BUILD_NUMBER}','.')
 	      image.run()
 	  }
-	}
        }          
         stage('Test') 
 	{
