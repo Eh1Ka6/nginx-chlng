@@ -47,7 +47,7 @@ pipeline
 			 }	
 		         steps {
 		         	script{
-		         		if(!fileExists("/"))
+		         		if(!fileExists("deps/"))
 							{
 	                        sh ('''mkdir deps''') 
 	                        }
@@ -63,7 +63,7 @@ pipeline
 	                 }
 	                 steps {
 	                 	script{
-	                 		if(!fileExists("/"))
+	                 		if(!fileExists("deps/"))
 							{
 	                        sh ('''mkdir deps''') 
 	                        }
@@ -79,7 +79,7 @@ pipeline
 	                 }
 	                 steps {
 	                 	script{
-	                 		if(!fileExists("/"))
+	                 		if(!fileExists("deps/"))
 							{
 	                        	sh ('''mkdir deps''') 
 	                        }
