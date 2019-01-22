@@ -39,19 +39,9 @@ pipeline
 		        }
 		    }
 		  }
-		} 
-		
-		        		
-	        
+		}      
         stage('Download missing lib') 
 		{
-		steps {
-		         	script{
-		         		
-	                 	sh ('''cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
-						env.ZLIB = "deps/zlib-1.2.11/"
-					}
-			  }	
 		   parallel 
 		   {
 		     stage('check for ZLIB')
