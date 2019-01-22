@@ -37,6 +37,9 @@ pipeline
 				{
 		            sh ('''mkdir deps''') 
 		        }
+		        echo "${env.SSL}"
+		        echo "${env.ZLIB}"
+		        echo "${env.PCRE}"
 		    }
 		  }
 		}      
@@ -77,7 +80,6 @@ pipeline
 	                 }
 	                 steps {
 	                 	script{
-	                 		
 	                        sh ('''cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
 	                        env.PCRE = "deps/pcre-8.40/"
 	                  }
@@ -89,6 +91,9 @@ pipeline
         stage('Build')
 	    {
             steps {
+            	echo "${env.SSL}"
+		        echo "${env.ZLIB}"
+		        echo "${env.PCRE}"
                 sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log --user=nginx --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  --with-http_ssl_module --with-openssl=${SSL} --with-zlib=${ZLIB}  --with-pcre=${PCRE}'
                 sh 'make'
 		 	}
