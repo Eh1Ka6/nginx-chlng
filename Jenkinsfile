@@ -1,6 +1,6 @@
 pipeline 
 {
-    agent any
+    agent { label 'whatever' }
     stages 
     {
 		stage ('Set SCM')
@@ -99,7 +99,18 @@ pipeline
                 def image = docker.build('ngx:${BUILD_NUMBER}','.')
                 }
 		 	}
-        }      
+        }  
+        stage('Build Image')
+	    {
+	   		agent { dockerfile true }
+            steps {
+            	script {
+
+                
+                def image = docker.build('ngx:${BUILD_NUMBER}','.')
+                }
+		 	}
+        }     
         stage('Test') 
 		{
             steps 
