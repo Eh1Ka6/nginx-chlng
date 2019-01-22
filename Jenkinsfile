@@ -50,6 +50,7 @@ pipeline {
                         env.ZLIB = "deps/pcre-8.40/"
                   }
 	  }
+	}
       stage('Build')
 	{
             steps {
