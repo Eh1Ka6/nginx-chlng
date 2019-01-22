@@ -7,8 +7,10 @@ pipeline {
 	DATE="" 
     } 
 
-    stages {
-	stage ('Set SCM'){
+    stages 
+    {
+	stage ('Set SCM')
+	{
 		steps {
 		  script{
 			def scmVars = checkout scm
@@ -79,17 +81,17 @@ pipeline {
                 sh 'make'
 		}
         }
-      node 
+      stage('Deploy') 
       {
-        def app
-	stage('Deploy') 
-	{
+      	node 
+      	 {
 	  steps 
 	  {
               def image = docker.build('Ngx:${BUILD_NUMBER}','.')
 	      image.run()
 	  }
-	}          
+	}
+       }          
         stage('Test') 
 	{
             steps 
