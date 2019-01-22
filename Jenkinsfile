@@ -102,7 +102,7 @@ pipeline
 		  steps 
 		  {
 	         script{
-	              def image = docker.build('Ngx:${BUILD_NUMBER}','.')
+	              def image = docker.build('ngx:${BUILD_NUMBER}','.')
 		      image.run()
 		    }
 		  }
