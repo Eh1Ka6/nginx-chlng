@@ -73,43 +73,42 @@ pipeline
 	                  }
 		     }
 		    }
-		  }
-	 	}
+		   }
+	 	  }
         stage('Build')
-	{
+	    {
             steps {
                 sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log --user=nginx --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  --with-http_ssl_module --with-openssl=${SSL} --with-zlib=${ZLIB}  --with-pcre=${PCRE}'
                 sh 'make'
-		}
+		 	}
         }
-
-      stage('Deploy') 
-      {
+		stage('Deploy') 
+        {
 		  steps 
 		  {
-	            script{
+	         script{
 	              def image = docker.build('Ngx:${BUILD_NUMBER}','.')
 		      image.run()
 		    }
 		  }
        }          
         stage('Test') 
-	{
+		{
             steps 
-	    {
-		script{
+	    	{
+			script{
                 env.IP = sh ('''docker inspect $(docker ps |grep {{image.id}}|cut -d ' ' -f 1)|grep IPAddress|cut -d '"' -f 4''' , returnStdout:true ).trim()
-		sh '''curl -o ${env.BUILD_ID}_${date}_nginx.out -s http://${IP}/'''		
-		}            
-	    }
+			    sh '''curl -o ${env.BUILD_ID}_${date}_nginx.out -s http://${IP}/'''		
+			}            
+	    	}
         }
-	stage('Archive') 
-	{
+		stage('Archive') 
+		{
             steps {
-		archiveArtifacts artifacts: '${env.BUILD_ID}_${date}_nginx.out', onlyIfSuccessful: false
+				archiveArtifacts artifacts: '${env.BUILD_ID}_${date}_nginx.out', onlyIfSuccessful: false
             }
-        }
+    	}
       }
  }
- }
+ 
 
