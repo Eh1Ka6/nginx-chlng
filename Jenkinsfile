@@ -102,11 +102,9 @@ pipeline
         }  
         stage('Build Image')
 	    {
-	   		agent { dockerfile true }
+	   		//agent { dockerfile true }
             steps {
             	script {
-
-               
                 def image = docker.build('ngx:${BUILD_NUMBER}','.')
                 }
 		 	}
