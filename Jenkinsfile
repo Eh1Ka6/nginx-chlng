@@ -93,10 +93,7 @@ pipeline
 	    {
             steps {
             	
-                sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx
-                --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log --user=nginx 
-                --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  --with-http_ssl_module
-                 --with-openssl=${SSL} --with-zlib=${ZLIB}  --with-pcre=${PCRE}'
+                sh './configure --prefix=/etc/nginx  --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx.conf --error-log-path=/var/log/nginx/error.log --user=nginx --group=nginx --builddir=nginx-1.15.0   --pid-path=/usr/local/nginx/nginx.pid  --with-http_ssl_module --with-openssl=${SSL} --with-zlib=${ZLIB}  --with-pcre=${PCRE}'
                 sh 'make'
 		 	}
         }
