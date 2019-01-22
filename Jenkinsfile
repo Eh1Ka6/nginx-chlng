@@ -81,10 +81,11 @@ pipeline {
                 sh 'make'
 		}
         }
-      stage('Deploy') 
-      {
       	node 
       	 {
+
+      stage('Deploy') 
+      {
 	  steps 
 	  {
               def image = docker.build('Ngx:${BUILD_NUMBER}','.')
