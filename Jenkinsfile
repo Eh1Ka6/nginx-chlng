@@ -38,8 +38,6 @@ pipeline
 		} 
         stage('Download missing lib') 
 		{
-		 steps 
-		  {
 		   parallel 
 		   {
 		     stage('check for ZLIB')
@@ -74,7 +72,7 @@ pipeline
 		     }
 		    }
 		   }
-	 	  }
+	 	  
         stage('Build')
 	    {
             steps {
