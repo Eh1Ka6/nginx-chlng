@@ -17,7 +17,6 @@ pipeline {
 		  }
 		}
 	 }
-
 	stage ('Set ENV var')
 	{
 	  steps
@@ -35,10 +34,7 @@ pipeline {
 		env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
 	    }
 	  }
-	}
-    }
-    stages
-    { 
+	} 
         stage('Download missing lib') 
 	{
 	 steps {
