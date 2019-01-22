@@ -13,7 +13,7 @@ pipeline {
 	  steps{
 	   script{
 		env.PCRE = sh(
-			script: '''ls -d -1 /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -q  ".*pcre\.so\.[3-8].*"''',
+			script: '''ls -d -1 /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -q  ".*pcre.so.[3-8].*"''',
 			returnStdout: true).trim()
 		env.SSL = sh (
 			  script: ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -E "^openssl-1.(0.[2-9])|openssl-1.(1.0)";''',
