@@ -36,6 +36,9 @@ pipeline {
 	    }
 	  }
 	}
+    }
+    stages
+    { 
         stage('Download missing lib') 
 	{
 	 steps {
@@ -74,6 +77,7 @@ pipeline {
 	    }
 	  }
 	}
+      
       stage('Build')
 	{
             steps {
