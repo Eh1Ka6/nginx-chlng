@@ -46,8 +46,10 @@ pipeline
 				expression { env.ZLIB  == null || env.ZLIB == "" }
 			 }	
 		         steps {
-				sh ('''if [! -d deps/  ];then mkdir deps ;fi && cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
-				env.ZLIB = "deps/zlib-1.2.11/"
+		         	script{
+						sh ('''if [! -d deps/  ];then mkdir deps ;fi && cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
+						env.ZLIB = "deps/zlib-1.2.11/"
+					}
 			  }
 		     }
 		     stage('check for SSL')
@@ -56,9 +58,11 @@ pipeline
 	                        expression { env.SSL  == null || env.SSL == "" }
 	                 }
 	                 steps {
+	                 	script{
 	                        sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && tar xzvf openssl-1.1.0f.tar.gz ''')   
-	                        env.ZLIB = "deps/openssl-1.1.0f/"
-	                  }
+	                        env.SSL= "deps/openssl-1.1.0f/"
+	                   }
+	                 }
 		     }
 		     stage('check for PCRE')
 		     {
@@ -66,9 +70,11 @@ pipeline
 	                        expression { env.PCRE  == null || env.PCRE == "" }
 	                 }
 	                 steps {
+	                 	script{
 	                        sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
-	                        env.ZLIB = "deps/pcre-8.40/"
+	                        env.PCRE = "deps/pcre-8.40/"
 	                  }
+	                }
 		     }
 		    }
 		   }
