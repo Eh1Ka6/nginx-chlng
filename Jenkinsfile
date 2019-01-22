@@ -13,15 +13,12 @@ pipeline {
 	  steps{
 	   script{
 		env.PCRE = sh(
-			script: '''ls -d -1 /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \\
-				   | grep -q  ".*pcre\.so\.[3-8].*"''',
+			script: '''ls -d -1 /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -q  ".*pcre\.so\.[3-8].*"''',
 			returnStdout: true).trim()
 		env.SSL = sh (
-			  script: ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \\
-					| grep -E "^openssl-1.(0.[2-9])|openssl-1.(1.0)";''',
+			  script: ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -E "^openssl-1.(0.[2-9])|openssl-1.(1.0)";''',
 			  returnStdout: true).trim()
-		env.ZLIB = sh ( script : ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* \\
-                                        | grep -E "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])""'''
+		env.ZLIB = sh ( script : ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -E "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])""'''
 					returnStdout: true).trim())
 		env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
 	   }
