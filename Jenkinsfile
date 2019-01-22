@@ -38,6 +38,14 @@ pipeline
 		} 
         stage('Download missing lib') 
 		{
+		steps {
+		       script{
+		         		if(!fileExists("deps/"))
+							{
+	                        sh ('''mkdir deps''') 
+	                        }        	
+					}
+			  }	
 		   parallel 
 		   {
 		     stage('check for ZLIB')
@@ -47,10 +55,7 @@ pipeline
 			 }	
 		         steps {
 		         	script{
-		         		if(!fileExists("deps/"))
-							{
-	                        sh ('''mkdir deps''') 
-	                        }
+		         		
 	                 	sh ('''cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
 						env.ZLIB = "deps/zlib-1.2.11/"
 					}
@@ -63,10 +68,7 @@ pipeline
 	                 }
 	                 steps {
 	                 	script{
-	                 		if(!fileExists("deps/"))
-							{
-	                        sh ('''mkdir deps''') 
-	                        }
+	                 		
 	                        sh ('''cd deps && wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && tar xzvf openssl-1.1.0f.tar.gz ''')   
 	                        env.SSL= "deps/openssl-1.1.0f/"
 	                   }
@@ -79,10 +81,6 @@ pipeline
 	                 }
 	                 steps {
 	                 	script{
-	                 		if(!fileExists("deps/"))
-							{
-	                        	sh ('''mkdir deps''') 
-	                        }
 	                        sh ('''cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
 	                        env.PCRE = "deps/pcre-8.40/"
 	                  }
