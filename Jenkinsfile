@@ -9,9 +9,10 @@ pipeline {
 		}
 	 }
 
-	stage ('Set ENV var'){
-	  steps{
-	   script{
+	stage ('Set ENV var')
+	{
+	  steps
+	  {
 		env.PCRE = sh(
 				returnStdout: true, script: '''ls -d -1 /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep   ".*pcre.so.[3-8].*"'''
 			     )
@@ -22,11 +23,13 @@ pipeline {
 		env.ZLIB = sh ( script : ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -E "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])";''',
 					returnStdout: true)
 		env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
-	    }
 	  }
 	}
-        stage('Download missing lib') {
-	  parallel {
+        stage('Download missing lib') 
+	{
+	 steps {
+	   parallel 
+	   {
 	    when {
 			expression { env.ZLIB  == null || env.ZLIB == "" }
 		 }	
@@ -48,7 +51,8 @@ pipeline {
                         sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
                         env.ZLIB = "deps/pcre-8.40/"
                   }
-	   }
+	    }
+	  }
 	}
       stage('Build')
 	{
@@ -57,19 +61,27 @@ pipeline {
                 sh 'make'
 		}
         }
-      node {
+      node 
+      {
         def app
-	stage('Deploy') {
+	stage('Deploy') 
+	{
+	  steps 
+	  {
               def image = docker.build('Ngx:${BUILD_NUMBER}','.')
 	      image.run()
-	    }          
-        stage('Test') {
-            steps {
+	  }
+	}          
+        stage('Test') 
+	{
+            steps 
+	    {
                 env.IP = sh ('''docker inspect $(docker ps |grep {{image.id}}|cut -d ' ' -f 1)|grep IPAddress|cut -d '"' -f 4''' , returnStdout:true ).trim()
 		sh '''curl -o ${env.BUILD_ID}_${date}_nginx.out -s http://${IP}/'''		
             }
         }
-	stage('Archive') {
+	stage('Archive') 
+	{
             steps {
 		archiveArtifacts artifacts: '${env.BUILD_ID}_${date}_nginx.out', onlyIfSuccessful: false
             }
