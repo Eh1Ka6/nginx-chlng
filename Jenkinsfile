@@ -32,7 +32,7 @@ pipeline {
 		 }	
 	    steps {
 			sh ('''if [! -d deps/  ];then mkdir deps ;fi && cd deps &&  wget http://www.zlib.net/zlib-1.2.11.tar.gz && tar xzvf zlib-1.2.11.tar.gz''') 
-			env.ZLIB = deps/zlib-1.2.11/
+			env.ZLIB = "deps/zlib-1.2.11/"
 		  }
 	    when {
                         expression { env.SSL  == null || env.SSL == "" }
@@ -40,14 +40,14 @@ pipeline {
             
             steps {
                         sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && tar xzvf openssl-1.1.0f.tar.gz ''')   
-                        env.ZLIB = deps/zlib-1.2.11/
+                        env.ZLIB = "deps/openssl-1.1.0f/"
                   }
 	    when {
                         expression { env.PCRE  == null || env.PCRE == "" }
                  }
             steps {
                         sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
-                        env.ZLIB = deps/zlib-1.2.11/
+                        env.ZLIB = "deps/pcre-8.40/"
                   }
 	  }
       stage('Build')
