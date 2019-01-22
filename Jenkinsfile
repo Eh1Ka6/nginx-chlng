@@ -7,7 +7,7 @@ pipeline {
 		steps {
 			def scmVars = checkout scm
 		}
-	}
+	 }
 
 	stage ('Set ENV var'){
 	  steps{
@@ -22,7 +22,7 @@ pipeline {
 		env.ZLIB = sh ( script : ''' ls -d -1 /usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/* | grep -E "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])";''',
 					returnStdout: true)
 		env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
-	   }
+	    }
 	  }
 	}
         stage('Download missing lib') {
@@ -37,7 +37,6 @@ pipeline {
 	    when {
                         expression { env.SSL  == null || env.SSL == "" }
                  }
-            
             steps {
                         sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz && tar xzvf openssl-1.1.0f.tar.gz ''')   
                         env.ZLIB = "deps/openssl-1.1.0f/"
@@ -49,7 +48,7 @@ pipeline {
                         sh ('''if [! -d deps/  ];then  mkdir deps ;fi && cd deps && wget https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz && tar xzvf pcre-8.40.tar.gz''')
                         env.ZLIB = "deps/pcre-8.40/"
                   }
-	  }
+	   }
 	}
       stage('Build')
 	{
