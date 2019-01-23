@@ -32,7 +32,7 @@ pipeline
 				}
 				env.DATE= sh ( script : '''date "+%Y-%m-%d_%H:%M:%S" ''' ,  returnStdout:true ).trim()
 				env.OUTFILE= "ngxBuild${BUILD_ID}_${DATE}_nginx.out"
-				if(!file {Exists("deps/"))
+				if(!fileExists("deps/"))
 				{
 		            sh ('''mkdir deps''') 
 		        }
