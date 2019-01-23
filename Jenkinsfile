@@ -108,7 +108,7 @@ pipeline
                 env.DID = sh (script :'''docker run -d ngx:${BUILD_NUMBER}''',returnStdout:true).trim()
                 env.IP = sh (script :"docker inspect -f '{{ .NetworkSettings.IPAddress }}' ${DID}", returnStdout:true ).trim()
                 sh '''curl -o ${BUILD_ID}_${DATE}_nginx.out -s http://${IP}/'''
-                sh ''' docker stop  ngx:${BUILD_NUMBER}'''
+                sh ''' docker stop  ${DID}}'''
                 sh ''' docker container rm ${DID}'''
                 }
 		 	}
