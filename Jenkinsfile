@@ -25,7 +25,7 @@ pipeline
 					   ).trim()
 				env.ZLIB = sh ( script : ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])" -type f -print -quit''',
 							returnStdout: true).trim()
-				env.DATE= sh ( script : '''date "+%Y-%m-%d %H:%M:%S" ''' ,  returnStdout:true ).trim()
+				env.DATE= sh ( script : '''date "+%Y-%m-%d_%H:%M:%S" ''' ,  returnStdout:true ).trim()
 				if(!fileExists("deps/"))
 				{
 		            sh ('''mkdir deps''') 
@@ -107,8 +107,8 @@ pipeline
                 def image = docker.build('ngx:${BUILD_NUMBER}','.')
                 env.DID = sh (script :'''docker run -d ngx:${BUILD_NUMBER}''',returnStdout:true).trim()
                 env.IP = sh (script :"docker inspect -f '{{ .NetworkSettings.IPAddress }}' ${DID}", returnStdout:true ).trim()
-                sh '''curl -o ${BUILD_ID}_${DATE}_nginx.out -s http://${IP}/'''
-                sh ''' docker stop  ${DID}}'''
+                sh '''curl -o ngxBuild${BUILD_ID}_${DATE}_nginx.out -s http://${IP}/'''
+                sh ''' docker stop  ${DID}'''
                 sh ''' docker container rm ${DID}'''
                 }
 		 	}
@@ -117,7 +117,7 @@ pipeline
 		{
             steps {
             	
-				archiveArtifacts artifacts: '${BUILD_ID}_${DATE}_nginx.out', onlyIfSuccessful: false
+				archiveArtifacts artifacts: 'ngxBuild${BUILD_ID}_${DATE}_nginx.out', onlyIfSuccessful: false
             }
     	}
       }
