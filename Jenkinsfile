@@ -118,7 +118,7 @@ pipeline
 		{
             steps {
             	
-				archiveArtifacts artifacts: '${OUTFILE}', onlyIfSuccessful: false
+				archiveArtifacts artifacts: ''**/*_nginx.out'', onlyIfSuccessful: false
             }
     	}
       }
