@@ -16,6 +16,7 @@ pipeline
 		  steps
 		  {
 		    script{	
+		    	try{
 				env.PCRE = sh(
 						returnStdout: true, script: '''find /lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex ".*pcre.so.[4-8].*" -type f -print -quit '''
 					     ).trim()
@@ -25,9 +26,13 @@ pipeline
 					   ).trim()
 				env.ZLIB = sh ( script : ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])" -type f -print -quit''',
 							returnStdout: true).trim()
+				}
+				catch (Exception e) {
+					echo "not building on  Debian/Ubuntu fall back handled on next stage"
+				}
 				env.DATE= sh ( script : '''date "+%Y-%m-%d_%H:%M:%S" ''' ,  returnStdout:true ).trim()
 				env.OUTFILE= "ngxBuild${BUILD_ID}_${DATE}_nginx.out"
-				if(!fileExists("deps/"))
+				if(!file {Exists("deps/"))
 				{
 		            sh ('''mkdir deps''') 
 		        }
