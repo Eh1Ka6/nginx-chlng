@@ -107,7 +107,8 @@ pipeline
             	script {
                 def image = docker.build('ngx:${BUILD_NUMBER}','.')
                 image.run()
-                env.IP = sh ('''docker inspect -f '{{ .NetworkSettings.IPAddress }}' {{image.id}}  ''', returnStdout:true ).trim()
+                env.DID = image.id
+                env.IP = sh ('''docker inspect -f '{{ .NetworkSettings.IPAddress }}' ${DID}''', returnStdout:true ).trim()
                 //sh ('''docker inspect $(docker ps |grep {{image.id}}|cut -d ' ' -f 1)|grep IPAddress|cut -d '\\"' -f 4''' , returnStdout:true ).trim()
                 sh '''curl -o ${env.BUILD_ID}_${date}_nginx.out -s http://${IP}/'''
                 }
