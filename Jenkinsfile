@@ -110,14 +110,14 @@ pipeline
                 env.DID = sh (script :'''docker run -d ngx:${BUILD_NUMBER}''',returnStdout:true).trim()
                 env.IP = sh (script :"docker inspect -f '{{ .NetworkSettings.IPAddress }}' ${DID}", returnStdout:true ).trim()
                 //sh ('''docker inspect $(docker ps |grep {{image.id}}|cut -d ' ' -f 1)|grep IPAddress|cut -d '\\"' -f 4''' , returnStdout:true ).trim()
-                sh '''curl -o ${env.BUILD_ID}_${date}_nginx.out -s http://${IP}/'''
+                sh '''curl -o ${BUILD_ID}_${date}_nginx.out -s http://${IP}/'''
                 }
 		 	}
         }     
 		stage('Archive') 
 		{
             steps {
-				archiveArtifacts artifacts: '${env.BUILD_ID}_${date}_nginx.out', onlyIfSuccessful: false
+				archiveArtifacts artifacts: '${BUILD_ID}_${date}_nginx.out', onlyIfSuccessful: false
             }
     	}
       }
