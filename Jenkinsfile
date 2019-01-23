@@ -111,7 +111,7 @@ pipeline
                 try {
                     sh '''rm *nginx.out'''
                 }
-                catch catch(Exception e) {
+                catch(Exception e) {
                 	echo "rm failed ... nothing to worry about"
                 }
                 sh '''curl -o ${OUTFILE} http://${IP}/'''
