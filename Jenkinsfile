@@ -102,7 +102,7 @@ pipeline
         }  
         stage('Build & Test Image')
 	    {
-	   		//agent { dockerfile true }            steps {
+	      steps {
             	script {
                 def image = docker.build('ngx:${BUILD_NUMBER}','.')
                 env.DID = sh (script :'''docker run -d ngx:${BUILD_NUMBER}''',returnStdout:true).trim()
