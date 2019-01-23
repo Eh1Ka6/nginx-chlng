@@ -108,7 +108,13 @@ pipeline
                 def image = docker.build('ngx:${BUILD_NUMBER}','.')
                 env.DID = sh (script :'''docker run -d ngx:${BUILD_NUMBER}''',returnStdout:true).trim()
                 env.IP = sh (script :"docker inspect -f '{{ .NetworkSettings.IPAddress }}' ${DID}", returnStdout:true ).trim()
-                sh '''curl -o ${OUTFILE} -s http://${IP}/'''
+                try {
+                    sh '''rm *nginx.out'''
+                }
+                catch catch(Exception e) {
+                	echo "rm failed ... nothing to worry about"
+                }
+                sh '''curl -o ${OUTFILE} http://${IP}/'''
                 sh ''' docker stop ${DID}'''
                 sh ''' docker container rm ${DID}'''
                 }
