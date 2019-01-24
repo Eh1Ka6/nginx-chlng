@@ -22,7 +22,7 @@ pipeline
 					     ).trim()
 				env.SSL = sh (
 					  returnStdout: true,
-					  script: ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "^openssl-1.(0.[2-9])|openssl-1.(1.0)" -type f -print -quit'''
+					  script: ''' find /usr/lib/x86qsdqdsdqsdsqsddqslinux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "^openssl-1.(0.[2-9])|openssl-1.(1.0)" -type f -print -quit'''
 					   ).trim()
 				env.ZLIB = sh ( script : ''' find /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/ -regex "libz.so.1.(1.[3-9])|libz.so.1.(2.[0-11])" -type f -print -quit''',
 							returnStdout: true).trim()
